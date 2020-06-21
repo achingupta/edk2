@@ -53,14 +53,17 @@ RequestMemoryPermissionChange (
   EFI_STATUS    Status;
   ARM_SVC_ARGS  ChangeMemoryPermissionsSvcArgs = {0};
 
-  ChangeMemoryPermissionsSvcArgs.Arg0 = ARM_SVC_ID_SP_SET_MEM_ATTRIBUTES_AARCH64;
-  ChangeMemoryPermissionsSvcArgs.Arg1 = BaseAddress;
-  ChangeMemoryPermissionsSvcArgs.Arg2 = EFI_SIZE_TO_PAGES(Length);
-  ChangeMemoryPermissionsSvcArgs.Arg3 = Permissions;
+  ChangeMemoryPermissionsSvcArgs.Arg0 = ARM_SVC_ID_FFA_MSG_SEND_DIRECT_REQ_AARCH64;
+  ChangeMemoryPermissionsSvcArgs.Arg1 = 0;
+  ChangeMemoryPermissionsSvcArgs.Arg2 = 0;
+  ChangeMemoryPermissionsSvcArgs.Arg3 = ARM_SVC_ID_SP_SET_MEM_ATTRIBUTES_AARCH64;
+  ChangeMemoryPermissionsSvcArgs.Arg4 = BaseAddress;
+  ChangeMemoryPermissionsSvcArgs.Arg5 = EFI_SIZE_TO_PAGES(Length);
+  ChangeMemoryPermissionsSvcArgs.Arg6 = Permissions;
 
   ArmCallSvc (&ChangeMemoryPermissionsSvcArgs);
 
-  Status = ChangeMemoryPermissionsSvcArgs.Arg0;
+  Status = ChangeMemoryPermissionsSvcArgs.Arg3;
 
   switch (Status) {
   case ARM_SVC_SPM_RET_SUCCESS:
