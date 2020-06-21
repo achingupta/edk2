@@ -32,8 +32,8 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #define SPM_MINOR_VER_MASK        0x0000FFFF
 #define SPM_MAJOR_VER_SHIFT       16
 
-CONST UINT32 SPM_MAJOR_VER = 0;
-CONST UINT32 SPM_MINOR_VER = 1;
+CONST UINT32 SPM_MAJOR_VER = 1;
+CONST UINT32 SPM_MINOR_VER = 0;
 
 CONST UINT8 BOOT_PAYLOAD_VERSION = 1;
 
@@ -167,7 +167,9 @@ GetSpmVersion (VOID)
   UINT32       SpmVersion;
   ARM_SVC_ARGS SpmVersionArgs;
 
-  SpmVersionArgs.Arg0 = ARM_SVC_ID_SPM_VERSION_AARCH32;
+  SpmVersionArgs.Arg0 = ARM_SVC_ID_FFA_VERSION_AARCH32;
+  SpmVersionArgs.Arg1 = SPM_MAJOR_VER << SPM_MAJOR_VER_SHIFT;
+  SpmVersionArgs.Arg1 |= SPM_MINOR_VER;
 
   ArmCallSvc (&SpmVersionArgs);
 
