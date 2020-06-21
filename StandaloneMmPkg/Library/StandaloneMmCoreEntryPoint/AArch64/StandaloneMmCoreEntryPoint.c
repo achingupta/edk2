@@ -119,11 +119,15 @@ DelegatedEventLoop (
     DEBUG ((DEBUG_INFO, "X1 :  0x%x\n", (UINT32) EventCompleteSvcArgs->Arg1));
     DEBUG ((DEBUG_INFO, "X2 :  0x%x\n", (UINT32) EventCompleteSvcArgs->Arg2));
     DEBUG ((DEBUG_INFO, "X3 :  0x%x\n", (UINT32) EventCompleteSvcArgs->Arg3));
+    DEBUG ((DEBUG_INFO, "X4 :  0x%x\n", (UINT32) EventCompleteSvcArgs->Arg4));
+    DEBUG ((DEBUG_INFO, "X5 :  0x%x\n", (UINT32) EventCompleteSvcArgs->Arg5));
+    DEBUG ((DEBUG_INFO, "X6 :  0x%x\n", (UINT32) EventCompleteSvcArgs->Arg6));
+    DEBUG ((DEBUG_INFO, "X7 :  0x%x\n", (UINT32) EventCompleteSvcArgs->Arg7));
 
     Status = CpuDriverEntryPoint (
-               EventCompleteSvcArgs->Arg0,
                EventCompleteSvcArgs->Arg3,
-               EventCompleteSvcArgs->Arg1
+               EventCompleteSvcArgs->Arg6,
+               EventCompleteSvcArgs->Arg4
                );
 
     if (EFI_ERROR (Status)) {
@@ -152,8 +156,11 @@ DelegatedEventLoop (
       break;
     }
 
-    EventCompleteSvcArgs->Arg0 = ARM_SVC_ID_SP_EVENT_COMPLETE_AARCH64;
-    EventCompleteSvcArgs->Arg1 = SvcStatus;
+    EventCompleteSvcArgs->Arg0 = ARM_SVC_ID_FFA_MSG_SEND_DIRECT_RESP_AARCH64;
+    EventCompleteSvcArgs->Arg1 = 0;
+    EventCompleteSvcArgs->Arg2 = 0;
+    EventCompleteSvcArgs->Arg3 = ARM_SVC_ID_SP_EVENT_COMPLETE_AARCH64;
+    EventCompleteSvcArgs->Arg4 = SvcStatus;
   }
 }
 
@@ -315,7 +322,10 @@ _ModuleEntryPoint (
 
 finish:
   ZeroMem (&InitMmFoundationSvcArgs, sizeof(InitMmFoundationSvcArgs));
-  InitMmFoundationSvcArgs.Arg0 = ARM_SVC_ID_SP_EVENT_COMPLETE_AARCH64;
-  InitMmFoundationSvcArgs.Arg1 = Status;
+  InitMmFoundationSvcArgs.Arg0 = ARM_SVC_ID_FFA_MSG_SEND_DIRECT_RESP_AARCH64;
+  InitMmFoundationSvcArgs.Arg1 = 0;
+  InitMmFoundationSvcArgs.Arg2 = 0;
+  InitMmFoundationSvcArgs.Arg3 = ARM_SVC_ID_SP_EVENT_COMPLETE_AARCH64;
+  InitMmFoundationSvcArgs.Arg4 = Status;
   DelegatedEventLoop (&InitMmFoundationSvcArgs);
 }
